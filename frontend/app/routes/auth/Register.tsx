@@ -7,13 +7,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { useRegisterMutation } from '@/hooks/use-auth'
+import { toast } from 'sonner'
 
 
 
-type registerData = z.infer<typeof registerSchema>
+export type registerData = z.infer<typeof registerSchema>
 
 const Register = () => {
+
+    const navigate = useNavigate();
+
   const form = useForm<registerData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -24,9 +29,29 @@ const Register = () => {
     },
   })
 
+  const { mutate, isPending } = useRegisterMutation();
+
   const handleSubmit = (data: registerData) => {
-    console.log(data)
-    // Handle login logic here, e.g., API call
+    mutate(data, {
+        onSuccess: () => {
+            toast.success('Verification Email sent! Please Verify.', {
+                duration: 3000,
+                position: 'top-right',
+            });
+
+            form.reset();
+            navigate('/login')
+
+        },
+        onError: (error: any) => {
+            const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+            toast.error(errorMessage, {
+                duration: 3000,
+                position: 'top-right',
+            });
+            console.log("Error during registration:", error);
+        }
+    });
   }
 
   return (
@@ -59,7 +84,7 @@ const Register = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type='password' placeholder='Enter your email' {...field} />
+                      <Input type='email' placeholder='Enter your email' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -94,7 +119,7 @@ const Register = () => {
                 )}
               />
 
-              <Button type='submit' className='w-full '>SignUp</Button>
+              <Button type='submit' className='w-full' disabled={isPending}>{isPending ? "Signing up..." : "Sign Up"}</Button>
               
             </form>
           </Form>
