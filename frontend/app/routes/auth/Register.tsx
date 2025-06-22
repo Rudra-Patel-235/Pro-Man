@@ -41,7 +41,6 @@ const Register = () => {
 
             form.reset();
             navigate('/login')
-
         },
         onError: (error: any) => {
             const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';

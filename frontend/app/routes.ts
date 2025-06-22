@@ -8,5 +8,10 @@ export default [
         route("forgot-password", "routes/auth/ForgotPassword.tsx"),
         route("reset-password", "routes/auth/ResetPassword.tsx"),
         route("verify-email", "routes/auth/VerifyEmail.tsx"),
+    ]),
+
+    layout("routes/dashboard/Dash.tsx", [
+        route("dashboard", "routes/dashboard/Dashboard.tsx")
     ])
+
 ] satisfies RouteConfig;

@@ -22,7 +22,7 @@ const userSchema = new Schema({
         select: false // Exclude password from queries by default
     },
 
-    Pic : {
+    profilePic : {
         type: String,
     },
 

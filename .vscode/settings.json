@@ -1,3 +1,9 @@
 {
-    "codium.codeCompletion.enable": true
+    "codium.codeCompletion.enable": true,
+    "mdb.presetConnections": [
+        {
+            "name": "Preset Connection",
+            "connectionString": "mongodb://localhost:27017"
+        }
+    ]
 }

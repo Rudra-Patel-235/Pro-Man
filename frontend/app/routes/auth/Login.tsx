@@ -7,13 +7,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router'
-
+import { Link, useNavigate } from 'react-router'
+import { useLoginMutation } from '@/hooks/use-auth'
+import { toast } from 'sonner'
+import { useAuth } from '@/tanstack/authContext'
 
 
 type loginData = z.infer<typeof loginSchema>
 
 const Login = () => {
+
+    const navigate = useNavigate();
+    const { login } = useAuth()
+
   const form = useForm<loginData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -22,9 +28,28 @@ const Login = () => {
     },
   })
 
+  const { mutate, isPending } = useLoginMutation();
+
+
   const handleSubmit = (data: loginData) => {
-    console.log(data)
-    // Handle login logic here, e.g., API call
+    mutate(data, {
+        onSuccess: (data) => {
+            login(data);
+            toast.success('Login successful!', {
+                duration: 3000,
+                position: 'top-right',
+            });
+            navigate('/dashboard')
+        },
+        onError: (error: any) => {
+            const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+            toast.error(errorMessage, {
+                duration: 3000,
+                position: 'top-right',
+            });
+            console.log("Error during login:", error);
+        }
+    });
   }
 
   return (
@@ -66,7 +91,9 @@ const Login = () => {
                   </FormItem>
                 )}              
               />
-              <Button type='submit' className='w-full '>Login</Button>
+              <Button type='submit' className='w-full' disabled={isPending}>
+                {isPending ? "Logging in..." : "Log In"}
+              </Button>
               
             </form>
           </Form>
