@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import authRouter from './routes/authRoutes.js';
-
+import workspaceRouter from './routes/workspaceRoutes.js';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -36,6 +36,8 @@ res.status(200).json({ message: 'Welcome to the API' });
 })
 
 app.use('/api/auth', authRouter);
+app.use('/api/workspaces', workspaceRouter);
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

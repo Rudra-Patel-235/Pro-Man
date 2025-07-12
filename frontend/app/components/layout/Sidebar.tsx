@@ -11,6 +11,7 @@ import {
   Settings,
   Users,
   Wrench,
+  type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
@@ -98,7 +99,7 @@ export const Sidebar = ({
 
       <ScrollArea className="flex-1 px-3 py-2">
         <SidebarNav
-          items={navItems}
+          items={navItems as { title: string; href: string; icon: LucideIcon }[]}
           isCollapsed={isCollapsed}
           className={cn(isCollapsed && "items-center space-y-2")}
           currentWorkspace={currentWorkspace}

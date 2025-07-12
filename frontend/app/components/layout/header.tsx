@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { Bell, PlusCircle } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { WorkspaceAvatar } from "../workspace/workSpaceAv";
 
 
@@ -20,7 +20,13 @@ export const Header = ({
 } : headerProps) => {
 
     const { user, logout } = useAuth()
-    const workspaces: any[] = []
+    const { workspaces } = useLoaderData() as { workspaces: Workspace[] }
+    console.log(workspaces)
+
+    const handleOnClick = (workspace: Workspace) => {
+        onWorkspaceSelected(workspace);
+        
+    }
 
     return (
         <div className="bg-background sticky z-40 top-0 border-b">

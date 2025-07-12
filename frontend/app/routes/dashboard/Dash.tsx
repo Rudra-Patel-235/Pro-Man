@@ -1,10 +1,21 @@
 import { Header } from '@/components/layout/header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import Loader from '@/components/Loader';
+import { NewWorkspace } from '@/components/workspace/newWorkspace';
+import { getData } from '@/lib/axios';
 import type { Workspace } from '@/schema';
 import { useAuth } from '@/tanstack/authContext';
 import React, { useState } from 'react'
 import { Navigate, Outlet } from 'react-router';
+
+export const clientLoader = async () => {
+    try {
+      const [workspaces] = await Promise.all([getData("/workspaces")]);
+      return { workspaces };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 const Dash = () => {
     const { isAuthenticated, isLoading } = useAuth();
@@ -41,6 +52,11 @@ const Dash = () => {
                     
                 </main>
             </div>
+
+            <NewWorkspace 
+                isCreatingWorkspace={isCreatingWorkspace}
+                setIsCreatingWorkspace={setIsCreatingWorkspace}
+            />
         </div>
     )
 }
