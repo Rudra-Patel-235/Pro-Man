@@ -19,9 +19,12 @@ export const Header = ({
     onCreateWorkspace,
 } : headerProps) => {
 
+    // const { user, logout } = useAuth()
+    // const { workspaces } = useLoaderData() as { workspaces: Workspace[] }
     const { user, logout } = useAuth()
-    const { workspaces } = useLoaderData() as { workspaces: Workspace[] }
-    console.log(workspaces)
+    const { workspaces = [] } = useLoaderData() as { workspaces?: Workspace[] } || {}
+
+    
 
     const handleOnClick = (workspace: Workspace) => {
         onWorkspaceSelected(workspace);

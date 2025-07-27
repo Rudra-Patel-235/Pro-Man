@@ -1,0 +1,71 @@
+class is user defined data type
+obj is instance of class
+
+Constructors are special class members which are called by the compiler every time an object of that class is instantiated. They are used to construct the objects and making them ready for use. Constructors have the same name as the class.
+
+Destructors is another special member function that is called by the compiler when the scope of the object ends. It deallocates all the memory previously used by the object of the class so that there will be no memory leaks.
+
+static members of a class are not associated with the objects of the class but with the class itself. The main feature of these members is that they are accessible directly through the class without creating any objects. Both data members and member methods can be static. only one copy exists for every object.
+
+
+A friend class has the ability to access the private and protected members of other classes where it is declared as a friend.
+
+friend function in C++ is similar to a friend class.Although it is not a member function of the class, it can still access and modify those private and protected members because it is declared as a friend.
+
+data hiding
+1. public
+2. private (default)
+3. protected
+
+How to Access Private Members? -> by getter, setter functions
+
+A friend function can be:
+    1. A global function    
+    2. A member function of another class
+
+friend void friendFunction(base& obj);
+
+Types of Constructors:
+1. default - automatically generated if not defined
+2. parameterized - 
+3. copy
+
+the C++ compiler doesn't create a default constructor when we define any type of constructor manually in the class.
+
+// Parameterized constructor with
+    // default value
+    GfG(int val = 22) {a = val;}
+
+class A{
+    A(x){}
+};
+
+
+A a(2);
+A b(a);
+A copy constructor is a type of constructor that creates an object using another object of the same class. 
+
+Destructor is an instance member function that is invoked automatically whenever an object is going to be destroyed
+~classname(){}
+
+
+shallow copy, an object is created by simply copying the data of all variables of the original object.
+if some variables are dynamically allocated memory from heap section, then the copied object variable will also reference the same memory location.
+(dangling pointer) (changes will reflect)
+
+
+Deep copy, an object is created by copying data of all variables, and it also allocates similar memory resources with the same value to the object.
+(when we make our own copy constructor)
+box(box& sample)
+{
+    length = sample.length;
+    breadth = new int;
+    *breadth = *(sample.breadth);
+    height = sample.height;
+}
+
+
+int A::x = 2;
+// accessing the static data member using scope
+// resultion operator
+cout << "Accessing static data member: " << A::x

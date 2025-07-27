@@ -23,6 +23,10 @@ const WorkspaceDetails = () => {
         isLoading: boolean;
     }; 
     
+    // logging project details
+    console.log(data);
+    // console.log("Workspace Details:", data.workspace);
+    // console.log("Projects:", data.projects);
     if(isLoading){
         return <Loader/>
     }

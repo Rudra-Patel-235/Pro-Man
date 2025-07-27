@@ -57,8 +57,9 @@ export const getWorkspaceProjects = async (req, res) => {
         const projects = await Project.find({ 
             workspace: req.params.workspaceId, 
             isArchived: false, 
-            members: { $in: [req.user._id] } 
-        }).populate("tasks", "title status")
+            // members: { $in: [req.user._id] } 
+        })
+        // .populate("tasks", "title status")
         .sort({ createdAt: -1 });
 
         res.status(200).json({

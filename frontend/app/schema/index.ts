@@ -100,4 +100,8 @@ export interface membersProps {
     joinedAt: Date;
 }
 
-
+export enum ProjectMemberRole {
+  MANAGER = "manager",
+  CONTRIBUTOR = "contributor",
+  VIEWER = "viewer",
+}

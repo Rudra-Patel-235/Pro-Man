@@ -31,3 +31,29 @@ export const workspaceSchema = z.object({
     color: z.string().min(1, "Color is required"),
     description: z.string().optional(),
 });
+
+export const projectSchema = z.object({
+    title: z.string().min(3, "title is required"),
+    description: z.string().optional(),
+    startDate: z.string(),
+    dueDate: z.string(),
+    tags: z.string().optional(),
+    status: z.enum(["Planning", "In Progress", "On Hold", "Completed", "Cancelled"]).optional(),
+    members: z.array(
+        z.object({
+            user: z.string(),
+            role: z.enum(["manager", "contributor", "viewer"]),
+        })
+    ).optional(),
+});
+
+
+
+export const taskSchema = z.object({
+    title: z.string().min(1, { message: 'Task title is required' }),
+    description: z.string().optional(),
+    status: z.enum(["To Do", "In Progress", "Review", "Done"]),
+    priority: z.enum(['Low', 'Medium', 'High']),
+    dueDate: z.string().min(1, { message: 'Due date is required' }),
+    assignees: z.array(z.string()).min(1, { message: 'At least one assignee is required' }),
+});
