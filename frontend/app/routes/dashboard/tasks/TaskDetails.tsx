@@ -1,16 +1,24 @@
 import { BackIcon } from '@/components/BackIcon';
 import Loader from '@/components/Loader';
+import { AssigneesSelector } from '@/components/task/AssigneesSelector';
+import { Comments } from '@/components/task/Comments';
+import { PrioritySelector } from '@/components/task/PrioritySelector';
+import { SubTasks } from '@/components/task/SubTasks';
+import { TaskActivity } from '@/components/task/TaskActivity';
+import { TaskDescription } from '@/components/task/TaskDescription';
 import { TaskStatusSelector } from '@/components/task/TaskStatusSelector';
 import { TaskTitle } from '@/components/task/TaskTitle';
+import { Watchers } from '@/components/task/Watchers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useGetTaskQuery } from '@/hooks/use-task';
+import { useArchiveTaskMutation, useGetTaskQuery, useWatchTaskMutation } from '@/hooks/use-task';
 import type { Project, Task } from '@/schema';
 import { useAuth } from '@/tanstack/authContext';
 import { formatDistanceToNow } from 'date-fns';
 import { Eye, EyeOff } from 'lucide-react';
 import React from 'react'
 import { useNavigate, useParams } from 'react-router';
+import { toast } from 'sonner';
 
 const TaskDetails = () => {
     const { user } = useAuth();
@@ -29,9 +37,73 @@ const TaskDetails = () => {
         isLoading: boolean;
     };
 
+    
+
+    const { mutate: watchTask, isPending: isWatching } = useWatchTaskMutation();
+    const { mutate: archivedTask, isPending: isAchieved } = useArchiveTaskMutation();
+
     if (isLoading) {
         return <div><Loader /></div>;
     }
+
+    if (!data) {
+        return (
+        <div className="flex items-center justify-center h-screen">
+            <div className="text-2xl font-bold">Task not found</div>
+        </div>
+        );
+    }
+
+    // const { task, project } = data;
+    // const isUserWatching = task?.watchers?.some(
+    //     (watcher) => watcher._id.toString() === user?._id.toString()
+    // );
+
+    // const goBack = () => navigate(-1);
+
+    // const members = task?.assignees || [];
+
+    const handleWatchTask = () => {
+        watchTask(
+        { taskId: task._id },
+        {
+            onSuccess: () => {
+                toast.success("Task watched", {
+                    duration: 3000,
+                    position: "top-right",
+                });
+            },
+            onError: () => {
+                toast.error("Failed to watch task", {
+                    duration: 3000,
+                    position: "top-right",
+                });
+            },
+        }
+        );
+    };
+
+    const handleArchivedTask = () => {
+        archivedTask(
+        { taskId: task._id },
+        {
+            onSuccess: () => {
+                toast.success("Task archived", {
+                    duration: 3000,
+                    position: "top-right",
+                });
+            },
+            onError: () => {
+                toast.error("Failed to archive task", {
+                    duration: 3000,
+                    position: "top-right",
+                });
+            },
+        }
+        );
+    };
+
+
 
 
     if (!data) {
@@ -96,7 +168,7 @@ const TaskDetails = () => {
             <Button
                 variant={"outline"}
                 size="sm"
-                onClick={handleAchievedTask}
+                onClick={handleArchivedTask}
                 className="w-fit"
                 disabled={isAchieved}
             >
@@ -164,19 +236,18 @@ const TaskDetails = () => {
                 projectMembers={project.members as any}
                 />
 
-                <TaskPrioritySelector priority={task.priority} taskId={task._id} />
+                <PrioritySelector priority={task.priority} taskId={task._id} />
 
-                <SubTasksDetails subTasks={task.subtasks || []} taskId={task._id} />
+                <SubTasks subTasks={task.subtasks || []} taskId={task._id} />
             </div>
 
-            <CommentSection taskId={task._id} members={project.members as any} />
+                <Comments taskId={task._id} members={project.members as any} />
             </div>
 
             {/* right side */}
             <div className="w-full">
-            <Watchers watchers={task.watchers || []} />
-
-            <TaskActivity resourceId={task._id} />
+                <Watchers watchers={task.watchers || []} />
+                <TaskActivity resourceId={task._id} /> 
             </div>
         </div>
         </div>

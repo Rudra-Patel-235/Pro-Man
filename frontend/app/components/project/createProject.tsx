@@ -17,6 +17,7 @@ import { Calendar } from '../ui/calendar';
 import { Checkbox } from '../ui/checkbox';
 import { useCreateProject } from '@/hooks/use-project';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 interface CreateProjectPopUpProps {
     isOpen: boolean;
@@ -28,6 +29,7 @@ interface CreateProjectPopUpProps {
 export type createProjectData = z.infer<typeof projectSchema>
 
 export const CreateProjectPopUp = ({isOpen, onChange, workspaceId, workspaceMembers}: CreateProjectPopUpProps) => {
+    const navigate = useNavigate();
 
     const form = useForm<createProjectData>({
         resolver: zodResolver(projectSchema),
@@ -53,13 +55,20 @@ export const CreateProjectPopUp = ({isOpen, onChange, workspaceId, workspaceMemb
             workspaceId
         },
         {
-            onSuccess: () => {
+            onSuccess: (data: any) => {
                 toast.success('Project created successfully!', {
                     duration: 3000,
                     position: 'top-right',
                 });
                 form.reset()
                 onChange(false)
+                
+                // Navigate to the newly created project if we have the project ID
+                if (data?.project?._id) {
+                    navigate(`/workspaces/${workspaceId}/projects/${data.project._id}`);
+                } else if (data?._id) {
+                    navigate(`/workspaces/${workspaceId}/projects/${data._id}`);
+                }
             },
 
             onError: (error: any) => {

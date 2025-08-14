@@ -3,12 +3,14 @@ import type { LucideIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useLocation, useNavigate } from "react-router";
 import type { Workspace } from "@/schema";
+import { Badge } from "../ui/badge";
 
 interface SidebarNavProps extends React.HtmlHTMLAttributes<HTMLElement> {
   items: {
     title: string;
     href: string;
     icon: LucideIcon;
+    badge?: string | null;
   }[];
   isCollapsed: boolean;
   currentWorkspace: Workspace | null;
@@ -43,18 +45,32 @@ export const SidebarNav = ({
         return (
           <Button
             key={el.href}
-            variant={isActive ? "outline" : "ghost"}
+            variant="ghost"
             className={cn(
-              "justify-start",
-              isActive && "bg-blue-800/20 text-blue-600 font-medium"
+              "w-full justify-start h-11 rounded-xl transition-all duration-200",
+              isActive 
+                ? "bg-blue-50 text-blue-700 font-semibold shadow-sm border border-blue-100" 
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50",
+              isCollapsed && "justify-center px-2"
             )}
             onClick={handleClick}
           >
-            <Icon className="mr-2 size-4" />
-            {isCollapsed ? (
+            <Icon className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
+            {!isCollapsed && (
+              <>
+                <span className="flex-1 text-left">{el.title}</span>
+                {el.badge && (
+                  <Badge 
+                    variant="secondary" 
+                    className="ml-auto bg-blue-100 text-blue-700 text-xs h-5 px-2"
+                  >
+                    {el.badge}
+                  </Badge>
+                )}
+              </>
+            )}
+            {isCollapsed && (
               <span className="sr-only">{el.title}</span>
-            ) : (
-              el.title
             )}
           </Button>
         );
